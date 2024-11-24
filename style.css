@@ -1,0 +1,111 @@
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.imge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100vh;
+    background-image: url('penguin.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    filter: blur(5px);
+}
+
+.game {
+    padding:50px 0 ;
+    position: relative;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    margin: 0 auto;
+}
+
+.head {
+    width: 20%; 
+    margin: 10px auto;
+    transition: 0.1s linear;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px 10px #00000085;
+    font-size: 30px;
+
+
+}
+
+@media (max-width:991px) {
+    .head {
+        width: 30%;
+    }
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center;
+    max-width: 360px; 
+    margin: 0 auto;
+    gap: 10px; 
+}
+
+.sq {
+    width: 100px;
+    height: 100px;
+    font-weight: bold;
+    transition: 0.1s linear;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px 10px #00000085;
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.sq:hover,
+.head:hover {
+    background: #000;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 2px 10px black;
+}
+
+@keyframes shake {
+    0% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        box-shadow :15px 15px 50px rgba(0,0,0,0.2);
+        transform: scale(1.2);
+    }
+    25% { 
+        border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+        transform: scale(1.2);
+
+    }
+    50% {
+        border-radius : 50% 50% 33% 67% / 55% 27% 73% 45%;
+        box-shadow :-10px -5px 50px rgba(0,0,0,0.2);
+        transform: scale(1.2);
+
+    }
+    75% {
+        border-radius : 33% 67% 58% 42% / 63% 68% 32% 37%	;
+        transform: scale(1.2);
+    }
+}
+
+.shake {
+    animation-duration: 2s;
+	animation-direction: normal;
+	animation-iteration-count: infinite;
+	animation-name: shake;
+	animation-timing-function: ease-in-out;
+}
