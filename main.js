@@ -1,94 +1,104 @@
-let head = document.querySelector('.head');
-let turn = 'x';
-let sq = [];
-const clickSound = new Audio('pen.m4a');
+// *[1] Get All Elements
+let gameMessage = document.querySelector(".head");
+let currentPlayer = "X";
+let boardCells = [];
+let restAllplay = document.getElementById("Rest");
+const clickSound = new Audio("pen.m4a");
+// =====================================================
+// *[2] Handle Cell Click
+function handleCellClick(cellId) {
+  let selectedCell = document.getElementById(cellId);
 
-// 
+  if (selectedCell.innerHTML === "") {
+    selectedCell.innerHTML = currentPlayer;
 
-function end(num1, num2, num3) {
-    head.innerHTML = `${sq[num1]} win`;
-    // 
-    document.getElementById('item' + num1).classList.add('shake');
-    document.getElementById('item' + num2).classList.add('shake');
-    document.getElementById('item' + num3).classList.add('shake');
-    // 
-    document.getElementById('item' + num1).style.cssText = " transform: scale(1.05);border-radius: 6px; box-shadow: 0 2px 10px black;  background-color:#FFE31A;";
-    document.getElementById('item' + num2).style.cssText = " transform: scale(1.05);border-radius: 6px; box-shadow: 0 2px 10px black;  background-color:#FFE31A;";
-    document.getElementById('item' + num3).style.cssText = " transform: scale(1.05);border-radius: 6px; box-shadow: 0 2px 10px black;  background-color:#FFE31A;";
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
+    gameMessage.innerHTML = `دور اللاعب: ${currentPlayer}`;
 
-    setInterval(function() { head.innerHTML += '.' }, 1000);
-
-    setTimeout(function() { location.reload() }, 7500);
-    clickSound.play();
+    checkForWinner();
+  }
 }
+// *[3] Check for Winner
+function checkForWinner() {
+  for (let i = 1; i < 10; i++) {
+    boardCells[i] = document.getElementById("item" + i).innerHTML;
+  }
 
-// Check for draw condition
-function checkDraw() {
-    let allFilled = true;
+  let winningPatterns = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9],
+    [1, 5, 9],
+    [3, 5, 7],
+  ];
 
-    for (let i = 1; i < 10; i++) {
-        if (document.getElementById('item' + i).innerHTML === '') {
-            allFilled = false;
-            break;
-        }
+  for (let pattern of winningPatterns) {
+    let [a, b, c] = pattern;
+    if (
+      boardCells[a] === boardCells[b] &&
+      boardCells[b] === boardCells[c] &&
+      boardCells[a] !== ""
+    ) {
+      announceWinner(a, b, c);
+      return;
     }
-
-    if (allFilled) {
-        head.innerHTML = "It's a Draw!";
-
-        setTimeout(function() { location.reload() }, 2000);
-        
-    }
-
+  }
+  //*[4] Check for Draw
+  checkForDraw();
 }
+// *[3] Is player is Win
+function announceWinner(a, b, c) {
+  gameMessage.innerHTML = `🎉 اللاعب ${boardCells[a]} فاز`;
+  // Style the sq wind
+  document.getElementById("item" + a).classList.add("shake");
+  document.getElementById("item" + b).classList.add("shake");
+  document.getElementById("item" + c).classList.add("shake");
+  let winningStyle =
+    "transform: scale(1.05); border-radius: 6px; box-shadow: 0 2px 10px black; background-color:#FFE31A;";
+  document.getElementById("item" + a).style.cssText = winningStyle;
+  document.getElementById("item" + b).style.cssText = winningStyle;
+  document.getElementById("item" + c).style.cssText = winningStyle;
 
-function win() {
-    for (let i = 1; i < 10; i++) {
-        sq[i] = document.getElementById('item' + i).innerHTML;
-    }
+  setTimeout(() => {
+    location.reload();
+  }, 7500);
 
-    if (sq[1] == sq[2] && sq[2] == sq[3] && sq[2] != '') {
-        end(1, 2, 3);
-    } else if (sq[4] == sq[5] && sq[5] == sq[6] && sq[5] != '') {
-        end(4, 5, 6);
-    } else if (sq[7] == sq[8] && sq[8] == sq[9] && sq[8] != '') {
-        end(7, 8, 9);
-    } else if (sq[1] == sq[4] && sq[4] == sq[7] && sq[4] != '') {
-        end(1, 4, 7);
-    } else if (sq[2] == sq[5] && sq[5] == sq[8] && sq[5] != '') {
-        end(2, 5, 8);
-    } else if (sq[3] == sq[6] && sq[6] == sq[9] && sq[3] != '') {
-        end(3, 6, 9);
-    } else if (sq[1] == sq[5] && sq[5] == sq[9] && sq[5] != '') {
-        end(1, 5, 9);
-    } else if (sq[3] == sq[5] && sq[5] == sq[7] && sq[5] != '') {
-        end(3, 5, 7);
-    } else {
-        // Check if it's a draw if no winner
-        checkDraw();
-    }
+  clickSound.play();
 }
+// *[4] is players draw
+function checkForDraw() {
+  let isBoardFull = true;
 
-function game(id) {
-    let elment = document.getElementById(id);
+  for (let i = 1; i < 10; i++) {
+    if (document.getElementById("item" + i).innerHTML === "") {
+      isBoardFull = false;
+      break;
+    }
+  }
 
-    if (turn === 'x' && elment.innerHTML == '') {
-        elment.innerHTML = 'x';
-
-        // تشغيل الصوت
-        // clickSound.play();
-
-        turn = 'o';
-        head.innerHTML = 'O';
-    } else if (turn === 'o' && elment.innerHTML == '') {
-        elment.innerHTML = 'o';
-
-        // تشغيل الصوت
-        // clickSound.play();
-
-        turn = 'x';
-        head.innerHTML = 'X';
-    };
-
-    win();
+  if (isBoardFull) {
+    gameMessage.innerHTML = "⚖️ تعادل";
+    setTimeout(() => {
+      location.reload();
+    }, 2000);
+  }
 }
+// *[6] Reset Game
+restAllplay.addEventListener("click", () => {
+  for (let i = 1; i < 10; i++) {
+    let cell = document.getElementById("item" + i);
+    cell.innerHTML = "";
+    cell.classList.remove("shake");
+    cell.style.cssText = "";
+  }
+
+  boardCells = [];
+  currentPlayer = "X";
+  gameMessage.innerHTML = `دور اللاعب: ${currentPlayer}`;
+
+  clickSound.pause();
+  clickSound.currentTime = 0;
+});
